@@ -31,12 +31,14 @@ class Knight {
 	int xpos;
 	int ypos;
 	Stack<Object> MBox;
+	PrintWriter OPwrite;
 	
-	public Knight(String n, int x, int y, Stack<Object> s) {
+	public Knight(String n, int x, int y, Stack<Object> s,PrintWriter pw) {
 		Name=n;
 		xpos=x;
 		ypos=y;
 		MBox=s;
+		OPwrite=pw;
 	}
 	
 	public int takeTurn(ArrayList<Knight> grid, int xq, int yq) throws FileNotFoundException, UnsupportedEncodingException{
@@ -86,28 +88,26 @@ class Knight {
 		}
 		catch(QueenFoundException e)
 		{
-			PrintWriter OPwrite = new PrintWriter("./src/Output.txt", "UTF-8");
-			OPwrite.append(e.getMessage());
-			OPwrite.close();
+			OPwrite.println(e.getMessage());
 			System.out.println(e.getMessage());
 			return -2; //queen has been found
 		}
 		catch(StackEmptyException e)
 		{
+			OPwrite.println(e.getMessage());
 			System.out.println(e.getMessage());
-			return indexOfremoval;
+			return indexOfremoval; //the index of the knight that got removed
 		}
 		catch(OverlapException e)
 		{
+			OPwrite.println(e.getMessage());
 			System.out.println(e.getMessage());
-			return indexOfremoval;
+			return indexOfremoval; //the index of the knight that got removed
 		}
 
 		catch(Exception e)
 		{
-			PrintWriter OPwrite = new PrintWriter("./src/Output.txt", "UTF-8");
-			OPwrite.append(e.getMessage());
-			OPwrite.close();
+			OPwrite.println(e.getMessage());
 			System.out.println(e.getMessage());
 			return -3; //all normal
 		}
@@ -158,7 +158,7 @@ class QueenFoundException extends Exception {
 public class Lab6 {
 	
 	public void StartGame(ArrayList<Knight> grid, int xq, int yq, int iterations) throws FileNotFoundException, UnsupportedEncodingException{
-		PrintWriter OPwrite = new PrintWriter("./src/Output.txt", "UTF-8");
+		
 		boolean flag=true;
 		
 		while(flag){
@@ -175,7 +175,7 @@ public class Lab6 {
 						for(int k=0; k<len; k++)
 						{
 							Knight knight=grid.get(k);
-							OPwrite.append(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
+							knight.OPwrite.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
 							System.out.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
 							int retVal=knight.takeTurn(grid,xq,yq);
 							if(retVal==-2) ///Queen has been found
@@ -198,11 +198,12 @@ public class Lab6 {
 			flag=false;
 		}
 		
-		OPwrite.close();
+		
 		return;
 	}
 	
 	public static void main(String[] args) throws IOException {
+		PrintWriter OPwrite = new PrintWriter("./src/Output.txt", "UTF-8");
 		Reader.init(System.in);
 		System.out.println("The number of knights - ");
 		int K=Reader.nextInt();
@@ -248,7 +249,7 @@ public class Lab6 {
 				st.push(o);
 			}
 			
-			Knight knight= new Knight(name,x,y,st);
+			Knight knight= new Knight(name,x,y,st,OPwrite);
 			KnightGrid.add(knight);
 			
 		}
@@ -263,6 +264,7 @@ public class Lab6 {
 		
 		Lab6 obj=new Lab6();
 		obj.StartGame(KnightGrid, xQ, yQ, I);
+		OPwrite.close();
 	}
 
 }
