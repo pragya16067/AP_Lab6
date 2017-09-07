@@ -1,3 +1,6 @@
+//NAME : PRAGYA PRAKASH
+//Roll No. : 2016067
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Stack;
@@ -31,17 +33,15 @@ class Knight {
 	int xpos;
 	int ypos;
 	Stack<Object> MBox;
-	PrintWriter OPwrite;
 	
-	public Knight(String n, int x, int y, Stack<Object> s,PrintWriter pw) {
+	public Knight(String n, int x, int y, Stack<Object> s) {
 		Name=n;
 		xpos=x;
 		ypos=y;
 		MBox=s;
-		OPwrite=pw;
 	}
 	
-	public int takeTurn(ArrayList<Knight> grid, int xq, int yq) throws FileNotFoundException, UnsupportedEncodingException{
+	public int takeTurn(ArrayList<Knight> grid, int xq, int yq, PrintWriter OPwrite) throws FileNotFoundException, UnsupportedEncodingException{
 		int indexOfremoval=0;
 		try
 		{
@@ -89,26 +89,26 @@ class Knight {
 		catch(QueenFoundException e)
 		{
 			OPwrite.println(e.getMessage());
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			return -2; //queen has been found
 		}
 		catch(StackEmptyException e)
 		{
 			OPwrite.println(e.getMessage());
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			return indexOfremoval; //the index of the knight that got removed
 		}
 		catch(OverlapException e)
 		{
 			OPwrite.println(e.getMessage());
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			return indexOfremoval; //the index of the knight that got removed
 		}
 
 		catch(Exception e)
 		{
 			OPwrite.println(e.getMessage());
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			return -3; //all normal
 		}
 		
@@ -157,7 +157,7 @@ class QueenFoundException extends Exception {
 
 public class Lab6 {
 	
-	public void StartGame(ArrayList<Knight> grid, int xq, int yq, int iterations) throws FileNotFoundException, UnsupportedEncodingException{
+	public void StartGame(ArrayList<Knight> grid, int xq, int yq, int iterations,PrintWriter OPwrite) throws FileNotFoundException, UnsupportedEncodingException{
 		
 		boolean flag=true;
 		
@@ -175,9 +175,10 @@ public class Lab6 {
 						for(int k=0; k<len; k++)
 						{
 							Knight knight=grid.get(k);
-							knight.OPwrite.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
-							System.out.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
-							int retVal=knight.takeTurn(grid,xq,yq);
+							//knight.OPwrite.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
+							OPwrite.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
+							//System.out.println(i+" "+knight.Name+" "+knight.xpos+" "+knight.ypos);
+							int retVal=knight.takeTurn(grid,xq,yq,OPwrite);
 							if(retVal==-2) ///Queen has been found
 							{
 								flag=false;
@@ -249,7 +250,7 @@ public class Lab6 {
 				st.push(o);
 			}
 			
-			Knight knight= new Knight(name,x,y,st,OPwrite);
+			Knight knight= new Knight(name,x,y,st);
 			KnightGrid.add(knight);
 			
 		}
@@ -263,7 +264,7 @@ public class Lab6 {
 		});
 		
 		Lab6 obj=new Lab6();
-		obj.StartGame(KnightGrid, xQ, yQ, I);
+		obj.StartGame(KnightGrid, xQ, yQ, I,OPwrite);
 		OPwrite.close();
 	}
 
